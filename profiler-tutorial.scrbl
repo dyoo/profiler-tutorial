@@ -22,18 +22,21 @@ re-implementation.
 #lang racket
 (provide my-flatten)
 
+(define (my-append x y)
+  (append x y))
+
 (define (my-flatten x)
   (cond
     [(pair? x)
-     (append (my-flatten (car x))
-             (my-flatten (cdr x)))]
+     (my-append (my-flatten (car x))
+                (my-flatten (cdr x)))]
     [(null? x) '()]
     [else
      (list x)]))
             }|
 
 For example:
-@(my-eval '(require "my-flatten-1.rkt"))
+@(my-eval '(require "my-flatten.rkt"))
 
 @interaction[#:eval my-eval
                     (my-flatten '((1) ((2) (3) 4)))]
@@ -60,7 +63,8 @@ Blah blah blah.  Let's bump that number higher, and see how much time it takes.
                     (define flattened (time (my-flatten my-data)))
                     (length flattened)]
 
-At the time of this writing, @racket[my-flatten] takes more than ten seconds on this.
+At the time of this writing, @racket[my-flatten] takes more than ten seconds
+on a fairly modern machine.
 This seems unreasonably long, considering that the list we're getting back is so short.
 
 
@@ -70,7 +74,10 @@ see what @racketmodname[profile] can tell us.
                     (require profile)]
 
 The simplest way to use the profiler is with @racket[profile], which works similarly
-to @racket[time] in taking in an expression.
+to @racket[time] in taking in an expression.  The profiler's granularity is at the level of
+defined functions.
 
-@interaction[#:eval my-eval
-                    (profile (void (my-flatten my-data)))]
+
+Also, make sure to run the profiler in as clean an environment as possible.
+That means outside DrRacket, unfortunately.  Also, to get better results from the profile, we
+should turn off all inlining.
