@@ -1,5 +1,7 @@
 #lang racket
-(require profile)
+(provide run)
+
+(require "my-flatten-2.rkt")
 
 (define (generate-data n)
     (cond
@@ -11,17 +13,8 @@
       [(odd? n)
        (list '() (list (generate-data (- n 1))))]))
 
-(define my-flatten
-  (parameterize ([current-namespace (make-base-namespace)])
-    (parameterize ([compile-context-preservation-enabled #t]
-                   [eval-jit-enabled #f])
-      (dynamic-require "my-flatten.rkt" 'my-flatten))))
-
-
 (define my-data (generate-data 30000))
-(define (test)
+
+(define (run)
   (void
    (my-flatten my-data)))
-
-
-(void (profile-thunk test))
