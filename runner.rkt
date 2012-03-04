@@ -17,4 +17,6 @@
 
 (define (run)
   (void
+   (printf "Current continuation-mark-set->context: ~s\n"
+           (continuation-mark-set->context (current-continuation-marks)))
    (my-flatten my-data)))

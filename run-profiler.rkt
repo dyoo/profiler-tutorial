@@ -5,6 +5,8 @@
 
 (parameterize ([compile-context-preservation-enabled #t]
                [compile-enforce-module-constants #f]
+               [use-compiled-file-paths '()]
+               [load-on-demand-enabled #f]
                [eval-jit-enabled #f])
   (parameterize ([current-namespace (make-base-namespace)])
     (with-syntax ([modname modname])
